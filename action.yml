@@ -1,0 +1,29 @@
+name: "GitHub Classroom - Custom Python Autograder"
+author: "Dominik Probst"
+description: "A custom plugin for GitHub Classroom that runs Python tests and reports the results. In comparison to the default Python Autograder, this plugin does work with far more test cases, since it does not report the exact test code and test output, but only the most important information."
+inputs:
+  timeout:
+    description: "Duration (in minutes) before the test is terminated. Defaults to 10 minutes with a maximum limit of 60 minutes."
+    default: "10"
+    required: true
+  max-score:
+    description: "The maximum amount of points a student can receive for this test."
+    required: true
+  setup-command:
+    description: "Command to execute prior to the test, typically for environment setup or dependency installation."
+    required: false
+  test-path:
+    description: "Path to the test file or directory."
+    required: false
+outputs:
+  result:
+    description: "Runner output"
+runs:
+  using: docker
+  image: Dockerfile
+  entrypoint: "/python-autograder/grading.sh"
+  args:
+    - "--timeout=${{ inputs.timeout }}"
+    - "--max-score=${{ inputs.max-score }}"
+    - "--setup-command=${{ inputs.setup-command }}"
+    - "--test-path=${{ inputs.test-path }}"
